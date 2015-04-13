@@ -1,4 +1,4 @@
 # ai
 
-2015. 4. 14.
-first Commit
+1. 2015. 4. 14.
++first Commit
