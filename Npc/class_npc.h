@@ -1,3 +1,6 @@
+#ifndef CLASS_NPC_H
+#define CLASS_NPC_H
+
 #include <iostream>
 #include <ext/hash_map>
 
@@ -10,18 +13,15 @@ using namespace __gnu_cxx;
 class npc {
 
 private:
-	hash_map< std::string, std::string > stat;
+	// Real Value of dbStat
+	hash_map<int, float> status;
+
+	std::string name;
 
 
 public:
-
-
-
-
-
-
-
-
+	void initNpc(InitDefine *);
 
 };
 
+#endif

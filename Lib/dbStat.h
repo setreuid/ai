@@ -7,6 +7,7 @@ using namespace std;
 
 
 struct dbStat {
+	int		no;
 	string	name;
 	float	maxValue;
 	float	value;

@@ -11,7 +11,15 @@ int main()
 	 * Load DB
 	 */
 	coredb = new InitDefine();
-	coredb.loadDB();
+	coredb->loadDB();
+
+
+	/**
+	 * Create Npcs
+	 */
+	npc *n = new npc();
+	n->initNpc(coredb);
+
 
 	return 0;
 }

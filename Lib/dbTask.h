@@ -1,5 +1,5 @@
-#ifndef DEFCORE_H
-#define DEFCORE_H
+#ifndef DBTASK_H
+#define DBTASK_H
 
 #include <iostream>
 #include <string>
@@ -7,7 +7,8 @@
 using namespace std;
 
 
-struct DefCore {
+struct dbTask {
+	int		no;
 	string	name;
 	string	statString;
 	float	value;

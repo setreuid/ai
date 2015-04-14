@@ -7,7 +7,7 @@
 #include <ext/hash_map>
 
 #include "dbStat.h"
-#include "DefCore.h"
+#include "dbTask.h"
 #include "../Npc/class_npc.h"
 #include <fstream>
 
@@ -16,8 +16,8 @@ using namespace __gnu_cxx;
 
 class InitDefine {
 private:
-	hash_map<std::string, dbStat> *RootStat;
-	hash_map<std::string, DefCore> *RootDefCore;
+	hash_map<int, dbStat> *RootStat;
+	hash_map<int, dbTask> *RootTask;
 
 	float calc( float, int, float );
 	int findProcedure( std::string );

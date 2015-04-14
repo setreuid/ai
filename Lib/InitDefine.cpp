@@ -3,8 +3,8 @@
 
 
 InitDefine::InitDefine() {
-	RootStat = new hash_map<string, dbStat>();
-	RootDefCore = new hash_map<string, DefCore>();
+	RootStat = new hash_map<int, dbStat>();
+	RootTask = new hash_map<int, dbTask>();
 };
 
 
@@ -42,6 +42,7 @@ void InitDefine::loadDB() {
 
 	std::string tmp = "";
 	char ch;
+	int i=0;
 
 	// Load stat defines
 	while (!dbstat.eof()) {
@@ -50,40 +51,52 @@ void InitDefine::loadDB() {
 			dbStat stat;
 			stringstream sp(tmp);
 
+			stat.no = i++;
 			sp >> stat.name;
 			sp >> stat.maxValue;
 			sp >> stat.value;
 			sp >> stat.cycleValue;
 
+			if (stat.name.compare("") != 0) {
+				RootStat->insert(RootStat->begin(), hash_map<int, dbStat>::value_type(stat.no, stat));
+				
+				// Debug
+				std::cout << stat.name << ": " << stat.maxValue << " / " << stat.value << " / " << stat.cycleValue << endl;
+			}
+
 			tmp = "";
 
-			// Debug
-			std::cout << stat.name << ": " << stat.maxValue << " " << stat.value << " " << stat.cycleValue << endl;
 		} else {
 			tmp += ch;
 		}
 	}
 
-	ch = 0;
+	ch = i = 0;
 	tmp = "";
 
 	// Load task defines
 	while (!dbtask.eof()) {
 		dbtask.get(ch);
 		if (ch == '\n') {
-			DefCore task;
+			dbTask task;
 			stringstream sp(tmp);
 
+			task.no = i++;
 			sp >> task.name;
 			sp >> task.statString;
 			sp >> task.value;
 			sp >> task.function;
 			sp >> task.cycleFunction;
 
+			if (task.name.compare("") != 0) {
+				RootTask->insert(RootTask->begin(), hash_map<int, dbTask>::value_type(task.no, task));
+				
+				// Debug
+				std::cout << task.name << ": " << task.statString << " / " << task.value << " / " << task.function << " / " << task.cycleFunction << endl;
+			}
+
 			tmp = "";
 
-			// Debug
-			std::cout << task.name << ": " << task.statString << " " << task.value << " " << task.function << " " << task.cycleFunction << endl;
 		} else {
 			tmp += ch;
 		}
