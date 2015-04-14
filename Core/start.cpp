@@ -18,7 +18,7 @@ int main()
 	 * Create Npcs
 	 */
 	npc *n = new npc();
-	n->initNpc(coredb);
+	n->initNpc(coredb->getRootStat());
 
 
 	return 0;

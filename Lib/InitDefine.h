@@ -1,5 +1,5 @@
-#ifndef INITDEFINE_H
-#define INITDEFINE_H
+#ifndef INIT_DEFINE_H
+#define INIT_DEFINE_H
 
 #include <iostream>
 #include <string>
@@ -28,6 +28,8 @@ public:
 	
 	void function( std::string, npc* );
 	void loadDB();
+
+	hash_map<int, dbStat> *getRootStat();
 	
 };
 

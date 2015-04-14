@@ -7,6 +7,8 @@
 #include <string>
 #include <iterator>
 
+#include "../Lib/dbStat.h"
+
 using namespace __gnu_cxx;
 
 
@@ -20,7 +22,7 @@ private:
 
 
 public:
-	void initNpc(InitDefine *);
+	void initNpc(hash_map<int, dbStat>*);
 
 };
 

@@ -7,6 +7,9 @@ InitDefine::InitDefine() {
 	RootTask = new hash_map<int, dbTask>();
 };
 
+hash_map<int, dbStat>* InitDefine::getRootStat() {
+	return this->RootStat;
+}
 
 void InitDefine::function( string val, npc *n ) {
 	int i;
