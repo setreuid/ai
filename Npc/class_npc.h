@@ -16,13 +16,15 @@ class npc {
 
 private:
 	// Real Value of dbStat
-	hash_map<int, float> status;
+	hash_map<int, float> *status;
+	hash_map<int, dbStat> *dbstat;
 
 	std::string name;
 
 
 public:
 	void initNpc(hash_map<int, dbStat>*);
+	float getStatus(int);
 
 };
 
