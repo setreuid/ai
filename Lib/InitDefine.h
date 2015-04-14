@@ -9,6 +9,7 @@
 #include "dbStat.h"
 #include "dbTask.h"
 #include "../Npc/class_npc.h"
+#include "preheader.h"
 #include <fstream>
 
 using namespace std;
@@ -21,16 +22,19 @@ private:
 
 	float calc( float, int, float );
 	int findProcedure( string );
-	int findDefault( string );
+	int findDefault( dbTask, string, npc* );
 
 public:
 	InitDefine();
 	
-	void function( string, npc* );
+	float function( dbTask, npc* );
 	void loadDB();
 
 	multimap<string, dbStat> *getRootStat();
+	multimap<string, dbTask> *getRootTask();
 	
 };
+
+
 
 #endif

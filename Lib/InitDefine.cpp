@@ -9,33 +9,57 @@ InitDefine::InitDefine() {
 
 multimap<string, dbStat>* InitDefine::getRootStat() {
 	return this->RootStat;
-}
+};
 
-void InitDefine::function( string val, npc *n ) {
+multimap<string, dbTask>* InitDefine::getRootTask() {
+	return this->RootTask;
+};
+
+
+
+
+/**
+ * 우선순위 연산 함수
+ */
+
+float InitDefine::function( dbTask task, npc *n ) {
 	int i;
 	string tmp = "";
-	float ret;
+	float ret = -1;
 	float value = 0;
-	float yetValue = 0;
-	int procedure = 0;
+	int ret2 = -1;
+	int procedure = -1;
+
+	string val = task.function;
 
 	for (i=0 ; i<val.size() ; i++) {
 		tmp += val.at(i);
 
-		if ((ret = findDefault(tmp)) != -1) {
-			if (yetValue != 0) {
-				value += calc (yetValue, procedure, ret);
-				procedure = 0;
-				ret = 0;
+		//cout << tmp << endl;
+		
+		// Task, 수식, Npc
+		if ((ret = findDefault(task, tmp, n)) != -1) {
+			if (procedure != -1) {
+				value = calc (value, procedure, ret);				// 우선순위 연산 수식 계산
+				procedure = ret2 = ret = -1;
+			} else {
+				value = ret;
 			}
 
 			tmp = "";
-			yetValue = ret;
-		} else if ((procedure = findProcedure(tmp)) != -1) {
+		} else if ((ret2 = findProcedure(tmp)) != -1) {
+			procedure = ret2;
 			tmp = "";
+		} else if (i >= val.size()-1) {								// 마지막 연산부는 숫자도 가능하다
+			ret = StringToNumber<float>(tmp.c_str());
+			value = calc (value, procedure, ret);
+
+			//cout << task.statString << ": " << value << " = " << value << " " << procedure << " " << ret << endl;
+			break;
 		}
 	}
 
+	return value;
 };
 
 
@@ -64,7 +88,7 @@ void InitDefine::loadDB() {
 				RootStat->insert (pair<string, dbStat>(stat.name, stat));
 				
 				// Debug
-				std::cout << stat.name << ": " << stat.maxValue << " / " << stat.value << " / " << stat.cycleValue << endl;
+				//cout << stat.name << ": " << stat.maxValue << " / " << stat.value << " / " << stat.cycleValue << endl;
 			}
 
 			tmp = "";
@@ -95,7 +119,7 @@ void InitDefine::loadDB() {
 				RootTask->insert (pair<string, dbTask>(task.name, task));
 				
 				// Debug
-				std::cout << task.name << ": " << task.statString << " / " << task.value << " / " << task.function << " / " << task.cycleFunction << endl;
+				//cout << task.name << ": " << task.statString << " / " << task.value << " / " << task.function << " / " << task.cycleFunction << endl;
 			}
 
 			tmp = "";
@@ -110,20 +134,28 @@ void InitDefine::loadDB() {
 };
 
 
-int InitDefine::findDefault( string t ) {
-	
-	return 0;
+int InitDefine::findDefault( dbTask task, string t, npc *n ) {
+	dbStat tmp_stat = n->getStatus(task.statString);
+
+	if (!t.compare("maxValue")) {
+		return tmp_stat.maxValue;
+	} else if (!t.compare("value")) {
+		return tmp_stat.value;
+	}
+
+	return -1;
 };
 
 
 int InitDefine::findProcedure( string t ) {
-	if (t.compare("+") == 0) {
+
+	if (!t.compare("+")) {
 		return 1;
-	} else if (t.compare("-") == 0) {
+	} else if (!t.compare("-")) {
 		return 2;
-	} else if (t.compare("*") == 0) {
+	} else if (!t.compare("*")) {
 		return 3;
-	} else if (t.compare("/") == 0) {
+	} else if (!t.compare("/")) {
 		return 4;
 	}
 
