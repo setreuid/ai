@@ -2,28 +2,28 @@
 #define CLASS_NPC_H
 
 #include <iostream>
-#include <ext/hash_map>
+#include <map>
 
 #include <string>
 #include <iterator>
 
 #include "../Lib/dbStat.h"
 
-using namespace __gnu_cxx;
+using namespace std;
 
 
 class npc {
 
 private:
 	// Real Value of dbStat
-	hash_map<const char*, dbStat> *status;
+	multimap<string, dbStat> *status;
 
-	std::string name;
+	string name;
 
 
 public:
-	void initNpc(hash_map<const char*, dbStat>*);
-	dbStat getStatus(const char*);
+	void initNpc(multimap<string, dbStat>*);
+	dbStat getStatus(string);
 
 };
 
