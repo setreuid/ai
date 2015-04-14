@@ -16,8 +16,8 @@ using namespace __gnu_cxx;
 
 class InitDefine {
 private:
-	hash_map<int, dbStat> *RootStat;
-	hash_map<int, dbTask> *RootTask;
+	hash_map<const char*, dbStat> *RootStat;
+	hash_map<const char*, dbTask> *RootTask;
 
 	float calc( float, int, float );
 	int findProcedure( std::string );
@@ -29,7 +29,7 @@ public:
 	void function( std::string, npc* );
 	void loadDB();
 
-	hash_map<int, dbStat> *getRootStat();
+	hash_map<const char*, dbStat> *getRootStat();
 	
 };
 

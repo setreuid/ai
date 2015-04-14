@@ -3,11 +3,11 @@
 
 
 InitDefine::InitDefine() {
-	RootStat = new hash_map<int, dbStat>();
-	RootTask = new hash_map<int, dbTask>();
+	RootStat = new hash_map<const char*, dbStat>();
+	RootTask = new hash_map<const char*, dbTask>();
 };
 
-hash_map<int, dbStat>* InitDefine::getRootStat() {
+hash_map<const char*, dbStat>* InitDefine::getRootStat() {
 	return this->RootStat;
 }
 
@@ -61,7 +61,7 @@ void InitDefine::loadDB() {
 			sp >> stat.cycleValue;
 
 			if (stat.name.compare("") != 0) {
-				RootStat->insert(RootStat->begin(), hash_map<int, dbStat>::value_type(stat.no, stat));
+				RootStat->insert (std::pair<const char*, dbStat>(stat.name.c_str(), stat));
 				
 				// Debug
 				std::cout << stat.name << ": " << stat.maxValue << " / " << stat.value << " / " << stat.cycleValue << endl;
@@ -92,7 +92,7 @@ void InitDefine::loadDB() {
 			sp >> task.cycleFunction;
 
 			if (task.name.compare("") != 0) {
-				RootTask->insert(RootTask->begin(), hash_map<int, dbTask>::value_type(task.no, task));
+				RootTask->insert (std::pair<const char*, dbTask>(task.name.c_str(), task));
 				
 				// Debug
 				std::cout << task.name << ": " << task.statString << " / " << task.value << " / " << task.function << " / " << task.cycleFunction << endl;
