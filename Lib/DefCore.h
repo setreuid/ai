@@ -1,16 +1,21 @@
+#ifndef DEFCORE_H
+#define DEFCORE_H
+
 #include <iostream>
 #include <string>
-#include "Stat.h"
+#include "dbStat.h"
 using namespace std;
 
 
 struct DefCore {
 	string	name;
-	Stat	stat;
+	string	statString;
 	float	value;
 	string	function;
 	string	cycleFunction;
 };
+
+#endif
 
 
 

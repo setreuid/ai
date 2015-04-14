@@ -2,13 +2,13 @@
 
 
 
-public InitDefine::InitDefine() {
-	RootStat = new hash_map<string, Stat>();
+InitDefine::InitDefine() {
+	RootStat = new hash_map<string, dbStat>();
 	RootDefCore = new hash_map<string, DefCore>();
 };
 
 
-public float InitDefine::function( String val ) {
+void InitDefine::function( string val, npc *n ) {
 	int i;
 	string tmp = "";
 	float ret;
@@ -36,30 +36,86 @@ public float InitDefine::function( String val ) {
 };
 
 
-private findDefault( string t ) {
-	
+void InitDefine::loadDB() {
+	ifstream dbstat("Res/stat.txt");
+	ifstream dbtask("Res/task.txt");
 
+	std::string tmp = "";
+	char ch;
+
+	// Load stat defines
+	while (!dbstat.eof()) {
+		dbstat.get(ch);
+		if (ch == '\n') {
+			dbStat stat;
+			stringstream sp(tmp);
+
+			sp >> stat.name;
+			sp >> stat.maxValue;
+			sp >> stat.value;
+			sp >> stat.cycleValue;
+
+			tmp = "";
+
+			// Debug
+			std::cout << stat.name << ": " << stat.maxValue << " " << stat.value << " " << stat.cycleValue << endl;
+		} else {
+			tmp += ch;
+		}
+	}
+
+	ch = 0;
+	tmp = "";
+
+	// Load task defines
+	while (!dbtask.eof()) {
+		dbtask.get(ch);
+		if (ch == '\n') {
+			DefCore task;
+			stringstream sp(tmp);
+
+			sp >> task.name;
+			sp >> task.statString;
+			sp >> task.value;
+			sp >> task.function;
+			sp >> task.cycleFunction;
+
+			tmp = "";
+
+			// Debug
+			std::cout << task.name << ": " << task.statString << " " << task.value << " " << task.function << " " << task.cycleFunction << endl;
+		} else {
+			tmp += ch;
+		}
+	}
+
+
+	cout << "DB LOADED!" << endl;
 };
 
 
-private int InitDefine::findProcedure( string t ) {
-	if (t.compare("+") {
+int InitDefine::findDefault( string t ) {
+	
+	return 0;
+};
+
+
+int InitDefine::findProcedure( string t ) {
+	if (t.compare("+") == 0) {
 		return 1;
-	} else if (t.compare("-") {
+	} else if (t.compare("-") == 0) {
 		return 2;
-	} else if (t.compare("*") {
+	} else if (t.compare("*") == 0) {
 		return 3;
-	} else if (t.compare("/") {
+	} else if (t.compare("/") == 0) {
 		return 4;
-	} else if (t.compare("%") {
-		return 5;
 	}
 
 	return -1;
 };
 
 
-private InitDefine::calc( float v1, int p, float v2 ) {
+float InitDefine::calc( float v1, int p, float v2 ) {
 	switch (p) {
 		case 1:
 			return v1 + v2;
@@ -72,9 +128,6 @@ private InitDefine::calc( float v1, int p, float v2 ) {
 		
 		case 4:
 			return v1 / v2;
-
-		case 5:
-			return v1 % v2;
 	}
 
 	return 0;

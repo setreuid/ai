@@ -1,25 +1,34 @@
+#ifndef INITDEFINE_H
+#define INITDEFINE_H
+
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <ext/hash_map>
 
-#include "Lib/Stat.h"
-#include "Lib/DefCore.h"
+#include "dbStat.h"
+#include "DefCore.h"
+#include "../Npc/class_npc.h"
+#include <fstream>
 
 using namespace __gnu_cxx;
 
 
 class InitDefine {
 private:
-	hash_map<std::string, Stat> RootStat;
-	hash_map<std::string, DefCore> RootDefCore;
+	hash_map<std::string, dbStat> *RootStat;
+	hash_map<std::string, DefCore> *RootDefCore;
 
-	calc( float, int, float );
-	findProcedure( std::string );
+	float calc( float, int, float );
+	int findProcedure( std::string );
+	int findDefault( std::string );
 
 public:
 	InitDefine();
 	
-	function( std::string );
+	void function( std::string, npc* );
+	void loadDB();
 	
 };
 
+#endif

@@ -1,5 +1,5 @@
 CC = g++
-OBJS = Core/start.o Npc/class_npc.o Lib/Stat.o Lib/DefCore.o
+OBJS = Core/start.o Npc/class_npc.o Lib/InitDefine.o
 
 TARGET = start
 DEFS = -Wno-deprecated
