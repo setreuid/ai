@@ -20,14 +20,10 @@ private:
 	multimap<string, dbStat> *RootStat;
 	multimap<string, dbTask> *RootTask;
 
-	float calc( float, int, float );
-	int findProcedure( string );
-	int findDefault( dbTask, string, npc* );
 
 public:
 	InitDefine();
 	
-	float function( dbTask, npc* );
 	void loadDB();
 
 	multimap<string, dbStat> *getRootStat();

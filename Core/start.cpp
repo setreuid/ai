@@ -18,17 +18,11 @@ int main()
 	/**
 	 * Create Npcs
 	 */
-	npc *n = new npc();
+	npc *n = new npc(coredb->getRootTask());
 	n->initNpc(coredb->getRootStat());
-
-
-	float res = coredb->function ( coredb->getRootTask()->find("일하기")->second, n );
-	cout << "RESULT " << res << endl;
-
-	
-
-
 	n->start();
+
+
 
 	// if Type AnyKey with NewLine, Exit
 	cin >> ch;
