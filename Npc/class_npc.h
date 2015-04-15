@@ -10,9 +10,11 @@
 #include <pthread.h>
 #include <unistd.h>
 
+#include "../Lib/InitDefine.h"
 #include "../Lib/preheader.h"
 #include "../Lib/dbStat.h"
 #include "../Lib/dbTask.h"
+
 
 using namespace std;
 
@@ -24,7 +26,10 @@ private:
 	multimap<string, dbStat> :: iterator is;
 	
 	// Priority Value, Todo
-	multimap<float, string> *prTaskTable;
+	multimap<float, dbTask> *prTaskTable;
+
+	class InitDefine *coredb;
+	multimap<string, npc> *npcs;
 
 	multimap<string, dbTask> *taskTable;
 	multimap<string, dbTask> :: iterator it;
@@ -35,19 +40,26 @@ private:
 	static void* run(void *);
 	static void* doTask(void *);
 	static void* reduceProcess(void *);
+	
+	void setStatusValue(string, float);
 
 
 public:
 	npc();
-	npc(multimap<string, dbTask>*);
+	npc(InitDefine *, multimap<string, npc> *);
 
-	void initNpc(multimap<string, dbStat>*);
+	void initNpc();
 	dbStat getStatus(string);
 	//void setStatus(string, float);
 
+	void newNpc();
+
 	void start();
+	string getName();
 
 	float function( dbTask );
+	void todoTask( dbTask );
+
 	float calc( float, int, float );
 	int findProcedure( string );
 	int findDefault( dbTask, string );

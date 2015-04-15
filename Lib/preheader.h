@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+
 using namespace std;
 
 template<typename T>
@@ -14,7 +15,7 @@ T StringToNumber(const string& numberAsString) {
 	stream >> valor;
 
 	if (stream.fail()) {
-		cout << "StringToNumber Fail!" << endl;
+		cout << "StringToNumber Fail: " << numberAsString << endl;
 	}
 
 	return valor;

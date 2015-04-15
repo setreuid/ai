@@ -1,12 +1,29 @@
 #include "class_npc.h"
 
 
-npc::npc( multimap<string, dbTask> *dt) {
-	taskTable = dt;
+npc::npc( InitDefine *df, multimap<string, npc> * ns ) {
+	coredb = df;
+	npcs = ns;
+
+	taskTable = coredb->getRootTask();	
+	npcs->insert( pair<string, npc>(this->getName(), *this) );
 };
 
 
-void npc::initNpc(multimap<string, dbStat> *st) {
+void npc::newNpc() {
+	npc *n = new npc(coredb, npcs);
+	n->initNpc();
+	n->start();
+};
+
+
+string npc::getName() {
+	return this->name;
+};
+
+
+void npc::initNpc() {
+	multimap<string, dbStat> *st = coredb->getRootStat();
 	status = new multimap<string, dbStat>();
 	srand ((unsigned int)time(NULL));
 
@@ -16,10 +33,12 @@ void npc::initNpc(multimap<string, dbStat> *st) {
 		status->insert (pair<string, dbStat>( i->first, i->second ));
 	}
 
-	this->prTaskTable = new multimap<float, string>();
+	this->prTaskTable = new multimap<float, dbTask>();
 
 	this->name = "NPC";
 	this->name.append (to_string((rand() % 1000) + 1));
+
+	//this->setStatusValue("증식치", (rand() % 3) + 1);
 };
 
 
@@ -30,7 +49,6 @@ dbStat npc::getStatus(string key) {
 		return result->second;
 	}
 
-	//cout << "Cant Found! " << key << endl;
 	return dbStat();
 };
 
@@ -49,11 +67,85 @@ void *npc::doTask(void *ptr) {
 	n->prTaskTable->clear();
 
 	for (n->it = n->taskTable->begin(); n->it != n->taskTable->end() ; ++(n->it)) {
-		n->prTaskTable->insert (pair<string, float>);
-		cout << n->it->first << ": " << n->function(n->it->second) << endl;
+		n->prTaskTable->insert (pair<float, dbTask>(n->function(n->it->second), n->it->second));
 	}
 
+	multimap<float, dbTask>::iterator e = n->prTaskTable->end();
+	e--;
+
+	n->todoTask (e->second);
 	return 0;
+};
+
+
+/**
+ * todoTask
+ */
+
+void npc::todoTask( dbTask task ) {
+	int i;
+	string tmp = "";
+	dbStat ret;
+	dbStat statValue;
+	float value = 0;
+	int ret2 = -1;
+	int procedure = -1;
+
+	string val = task.cycleFunction;
+
+	if (!val.compare("fnewNpc")) {
+		if (this->getStatus("증식치").value > 0) {
+			this->newNpc();
+			this->setStatusValue("증식치", this->getStatus("증식치").value-1);
+		}
+		return;
+	}
+
+	for (i=0 ; i<val.size() ; i++) {
+		tmp += val.at(i);
+
+		// cout << tmp << endl;
+		
+		// Task, 수식, Npc
+		if ((ret = getStatus(tmp)).name.compare("") != 0) {
+			if (procedure != -1) {
+				value = calc (statValue.value, procedure, ret.value);
+				// cout << value << " = " << statValue.value << " " << ret.value << endl;
+				setStatusValue (statValue.name, value);
+
+				procedure = ret2 = -1;
+			} else {
+				statValue = ret;
+			}
+
+			tmp = "";
+		} else if ((ret2 = findProcedure(tmp)) != -1) {
+			procedure = ret2;
+			tmp = "";
+		} else if (i >= val.size()-1 || val.at(i) == '&') {
+			if (val.at(i) == '&')
+				tmp = tmp.substr (0, tmp.size()-1);
+			value = StringToNumber<float>(tmp.c_str());
+			value = calc (statValue.value, procedure, value);
+			
+			// cout << value << " = " << statValue.value << " " << value << endl;
+			setStatusValue (statValue.name, value);
+
+			procedure = ret2 = -1;
+			tmp = "";
+		}
+	}
+
+	return;
+};
+
+
+void npc::setStatusValue( string key, float val ) {
+	multimap<string, dbStat> :: iterator result = status->find(key);
+	
+	if (result != status->end()) {
+		result->second.value = val;
+	}
 };
 
 
@@ -110,7 +202,7 @@ float npc::function( dbTask task ) {
 	for (i=0 ; i<val.size() ; i++) {
 		tmp += val.at(i);
 
-		//cout << tmp << endl;
+		// cout << tmp << endl;
 		
 		// Task, 수식, Npc
 		if ((ret = findDefault(task, tmp)) != -1) {
@@ -119,6 +211,7 @@ float npc::function( dbTask task ) {
 				procedure = ret2 = ret = -1;
 			} else {
 				value = ret;
+				// cout << ret << endl;
 			}
 
 			tmp = "";
@@ -129,7 +222,7 @@ float npc::function( dbTask task ) {
 			ret = StringToNumber<float>(tmp.c_str());
 			value = calc (value, procedure, ret);
 
-			//cout << task.statString << ": " << value << " = " << value << " " << procedure << " " << ret << endl;
+			// cout << task.statString << ": " << value << " = " << value << " " << procedure << " " << ret << endl;
 			break;
 		}
 	}
@@ -139,15 +232,15 @@ float npc::function( dbTask task ) {
 
 
 int npc::findDefault( dbTask task, string t ) {
-	dbStat tmp_stat = this->getStatus(task.statString);
+	dbStat stat = this->getStatus(task.statString);
 
 	if (!t.compare("maxValue")) {
-		return tmp_stat.maxValue;
+		return stat.maxValue;
 	} else if (!t.compare("value")) {
-		return tmp_stat.value;
+		return stat.value;
+	} else {
+		return -1;
 	}
-
-	return -1;
 };
 
 

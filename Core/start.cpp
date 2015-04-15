@@ -7,6 +7,7 @@ int main()
 	char ch;
 	cout << "AI World 2015. START!" << endl;
 
+	npcs = new multimap<string, npc>();
 
 	/**
 	 * Load DB
@@ -18,9 +19,10 @@ int main()
 	/**
 	 * Create Npcs
 	 */
-	npc *n = new npc(coredb->getRootTask());
-	n->initNpc(coredb->getRootStat());
-	n->start();
+	npc n = npc(coredb, npcs);
+	n.initNpc();
+	n.start();
+
 
 
 

@@ -6,10 +6,10 @@
 #include <sstream>
 #include <map>
 
-#include "dbStat.h"
-#include "dbTask.h"
 #include "../Npc/class_npc.h"
 #include "preheader.h"
+#include "dbStat.h"
+#include "dbTask.h"
 #include <fstream>
 
 using namespace std;
