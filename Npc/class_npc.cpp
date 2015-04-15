@@ -38,7 +38,8 @@ void npc::initNpc() {
 	this->name = "NPC";
 	this->name.append (to_string((rand() % 1000) + 1));
 
-	//this->setStatusValue("증식치", (rand() % 3) + 1);
+	this->setStatusValue("증식치", (rand() % 3) + 1);
+	this->lastTaskName = "";
 };
 
 
@@ -92,6 +93,11 @@ void npc::todoTask( dbTask task ) {
 	int procedure = -1;
 
 	string val = task.cycleFunction;
+
+	if (this->lastTaskName.compare(val) != 0) {
+		this->lastTaskName = val;
+		cout << this->getName() << " " << val << endl;
+	}
 
 	if (!val.compare("fnewNpc")) {
 		if (this->getStatus("증식치").value > 0) {
@@ -239,7 +245,12 @@ int npc::findDefault( dbTask task, string t ) {
 	} else if (!t.compare("value")) {
 		return stat.value;
 	} else {
-		return -1;
+		dbStat stat = this->getStatus(t);
+		if (stat.name.compare("") !=0) {
+			return stat.value;
+		} else {
+			return -1;
+		}
 	}
 };
 

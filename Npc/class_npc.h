@@ -36,6 +36,7 @@ private:
 
 	string name;
 	pthread_t thread;
+	string lastTaskName;
 
 	static void* run(void *);
 	static void* doTask(void *);

@@ -26,6 +26,7 @@ int main()
 
 
 
+	
 	// if Type AnyKey with NewLine, Exit
 	cin >> ch;
 
